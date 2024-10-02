@@ -1,37 +1,57 @@
-# from pyrandwalk import *
-# import numpy as np
-# states = [0, 1, 2, 3, 4]
-# trans = np.array([[1,    0, 0,    0, 0],
-#                 [0.25, 0, 0.75, 0, 0],
-#                 [0, 0.25, 0, 0.75, 0],
-#                 [0, 0, 0.25, 0, 0.75],
-#                 [0, 0,    0, 1,    0]])
-# rw = RandomWalk(states, trans)
-# rw.prob_sec([2, 1, 0])
-# states, probs = rw.run()
-# print(rw.get_edges())
-
 import plotly.graph_objects as go
 import numpy as np
 np.random.seed(1)
 
 l = 100
-steps = np.random.choice([-1, 1], size=l) + 0.05 * np.random.randn(l) # l steps
-position = np.cumsum(steps) # integrate the position by summing steps values
-y = 0.05 * np.random.randn(l)
 
-fig = go.Figure(data=go.Scatter(
-    x=position,
-    y=y,
+# Caminata A: Sin ruido
+steps_A = np.random.choice([-1, 1], size=l)
+position_A = np.cumsum(steps_A)
+
+# Caminata B: Ruido bajo
+steps_B = np.random.choice([-1, 1], size=l) + 0.05 * np.random.randn(l)
+position_B = np.cumsum(steps_B)
+
+# Caminata C: Ruido alto
+steps_C = np.random.choice([-1, 1], size=l) + 0.2 * np.random.randn(l)
+position_C = np.cumsum(steps_C)
+
+# Graficar todas las caminatas
+fig = go.Figure()
+
+# Caminata A
+fig.add_trace(go.Scatter(
+    x=position_A,
+    y=0.05 * np.random.randn(l),  # Mantén algo de variabilidad en y
     mode='markers',
-    name='Random Walk in 1D',
-    marker=dict(
-        color=np.arange(l),
-        size=7,
-        colorscale='Reds',
-        showscale=True,
-    )
+    name='Caminata A (Sin Ruido)',
+    marker=dict(color='blue', size=7)
 ))
 
-fig.update_layout(yaxis_range=[-1, 1])
+# Caminata B
+fig.add_trace(go.Scatter(
+    x=position_B,
+    y=0.05 * np.random.randn(l),
+    mode='markers',
+    name='Caminata B (Ruido Bajo)',
+    marker=dict(color='green', size=7)
+))
+
+# Caminata C
+fig.add_trace(go.Scatter(
+    x=position_C,
+    y=0.05 * np.random.randn(l),
+    mode='markers',
+    name='Caminata C (Ruido Alto)',
+    marker=dict(color='red', size=7)
+))
+
+# Ajuste del gráfico
+fig.update_layout(
+    title="Comparación de Caminatas Aleatorias con Diferentes Niveles de Ruido",
+    xaxis_title="Posición (x)",
+    yaxis_title="Dispersión aleatoria (y)",
+    yaxis_range=[-1, 1]
+)
+
 fig.show()
